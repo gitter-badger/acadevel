@@ -16,7 +16,12 @@ class Setup extends Migration
         Schema::create('trainings', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('slug');
+            $table->integer('maxAttendees');
             $table->timestamps();
+
+            $table->unique('name');
+            $table->unique('slug');
         });
 
         Schema::create('attendees', function(Blueprint $table) {

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Training extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'maxAttendees'];
 
     public function attendees()
     {
@@ -24,5 +24,14 @@ class Training extends Model
     public function exam()
     {
         return $this->hasOne(Exam::class);
+    }
+
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        self::saving(function($training) {
+            $training->slug = str_slug($training->name);
+        });
     }
 }

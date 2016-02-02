@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Training;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -19,6 +20,34 @@ class Controller extends BaseController
 
     public function __construct()
     {
+        $this->createMenu();
+    }
+
+    /**
+     * Get the evaluated view contents for the given view.
+     *
+     * @param  string $view
+     * @param  array  $data
+     * @return View
+     */
+    public function render($view, array $data = [])
+    {
+        return view($view, array_merge($this->_viewData, $data));
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
+    public function assign($key, $value)
+    {
+        $this->_viewData[$key] = $value;
+    }
+
+    private function createMenu()
+    {
+        $schulungen = $this->getSchulungen();
+
         $menu = [
             [
                 'type' => 'category',
@@ -41,33 +70,11 @@ class Controller extends BaseController
             [
                 'type' => 'category',
                 'label' => 'Schulungen'
-            ],
-            [
-                'type' => 'link',
-                'url' => url('/traning/developer'),
-                'label' => 'Developer',
-                'active' => false
-            ],
-            [
-                'type' => 'link',
-                'url' => url('/traning/developer-advanced'),
-                'label' => 'Developer Plus',
-                'active' => false
-            ],
-            [
-                'type' => 'link',
-                'url' => url('/traning/template'),
-                'label' => 'Template',
-                'active' => false
-            ],
-            [
-                'type' => 'link',
-                'url' => url('/traning/template-advanced'),
-                'label' => 'Template Plus',
-                'active' => false
-            ],
+            ]
+        ];
 
-
+        $menu = array_merge($menu, $schulungen);
+        $menu = array_merge($menu, [
             [
                 'type' => 'category',
                 'label' => 'Auswertung'
@@ -78,29 +85,25 @@ class Controller extends BaseController
                 'label' => 'Auswertung',
                 'active' => false
             ]
-        ];
+        ]);
 
         $this->assign('menu', $menu);
     }
 
-    /**
-     * Get the evaluated view contents for the given view.
-     *
-     * @param  string $view
-     * @param  array  $data
-     * @return View
-     */
-    public function render($view, array $data = [])
+    private function getSchulungen()
     {
-        return view($view, array_merge($this->_viewData, $data));
-    }
+        $schulungen = Training::all();
+        $menuItems = [];
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     */
-    public function assign($key, $value)
-    {
-        $this->_viewData[$key] = $value;
+        foreach ($schulungen as $schulung) {
+            $menuItems[] = [
+                'type' => 'link',
+                'url' => route('trainings.show', ['id' => $schulung->id, 'slug' => $schulung->slug]),
+                'label' => $schulung->name,
+                'active' => false
+            ];
+        }
+
+        return $menuItems;
     }
 }

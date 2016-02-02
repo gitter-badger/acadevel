@@ -45,7 +45,8 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:3'
+            'name' => 'required|min:3',
+            'maxAttendees' => 'integer|min:1'
         ]);
 
         return Training::create($request->all());
@@ -57,9 +58,15 @@ class TrainingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        return Training::findOrFail($id);
+        $training = Training::with('attendees')->findOrFail($id);
+
+        if ($request->wantsJson()) {
+            return $training;
+        }
+
+        return $this->render('training/index', ['training' => $training]);
     }
 
     /**
@@ -68,9 +75,31 @@ class TrainingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        //
+        $training = Training::findOrFail($id);
+        $errors = null;
+
+        if ($request->method() === Request::METHOD_POST) {
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|unique:trainings,name,'.$id.'|min:3',
+                'maxAttendees' => 'min:1|integer'
+            ]);
+
+            $training->fill($request->all());
+
+            if (!$validator->fails()) {
+                $training->save();
+
+                $request->session()->flash('saved', true);
+
+                return redirect()->route('trainings.edit', [$training->id, $training->slug]);
+            } else {
+                $errors = $validator->errors();
+            }
+        }
+
+        return $this->render('training/edit', ['training' => $training, 'errors' => $errors]);
     }
 
     /**
@@ -85,7 +114,8 @@ class TrainingController extends Controller
         $training = Training::findOrFail($id);
 
         $this->validate($request, [
-            'name' => 'required|unique:training|min:3'
+            'name' => 'required|unique:trainings,name,'.$id.'|min:3',
+            'maxAttendees' => 'min:1|integer'
         ]);
 
         $training->fill($request->all());
