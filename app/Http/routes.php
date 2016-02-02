@@ -29,6 +29,8 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::resource('trainings', 'TrainingController');
 Route::resource('trainings.attendees', 'AttendeeController');
+Route::resource('trainings.questions', 'QuestionController');
+Route::resource('trainings.questions.answers', 'AnswerController');
 
 // Frontend Routes
 Route::get('/', 'DashboardController@index');

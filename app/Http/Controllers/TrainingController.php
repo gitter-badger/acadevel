@@ -23,7 +23,7 @@ class TrainingController extends Controller
         $limit = (int) Input::get('limit', 25);
         $page = (int) Input::get('page', 1);
 
-        return Training::get()->toArray();
+        return Training::paginate($limit, ['*'], 'page', $page);
     }
 
     /**
@@ -89,7 +89,6 @@ class TrainingController extends Controller
         ]);
 
         $training->fill($request->all());
-
         $training->save();
 
         return $training;

@@ -14,4 +14,8 @@ class Attendee extends Model
         return $this->hasMany(ExamAnswer::class);
     }
 
+    public function training()
+    {
+        return $this->belongsTo(Training::class);
+    }
 }

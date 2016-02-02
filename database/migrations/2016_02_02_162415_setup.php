@@ -27,6 +27,24 @@ class Setup extends Migration
             $table->string('company');
             $table->timestamps();
         });
+
+        Schema::create('questions', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('training_id');
+            $table->text('text');
+            $table->timestamps();
+        });
+
+
+        Schema::create('answers', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('question_id');
+            $table->text('text');
+            $table->boolean('isCorrect');
+            $table->timestamps();
+        });
+
+
     }
 
     /**
@@ -38,5 +56,7 @@ class Setup extends Migration
     {
         Schema::drop('trainings');
         Schema::drop('attendees');
+        Schema::drop('questions');
+        Schema::drop('answers');
     }
 }

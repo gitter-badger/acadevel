@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attendee;
 use App\Models\Training;
 use Illuminate\Http\Request;
 
@@ -10,23 +9,24 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
-class AttendeeController extends Controller
+class AnswerController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($trainingId)
+    public function index($trainingId, $questionId)
     {
         $training = Training::findOrFail($trainingId);
+        $question = $training->questions()->findOrFail($questionId);
 
         $limit = (int) Input::get('limit', 25);
         $page = (int) Input::get('page', 1);
 
-        $attendees = $training->attendees()->paginate($limit, ['*'], 'page', $page);
+        $answers = $question->answers()->paginate($limit, ['*'], 'page', $page);
 
-        return $attendees;
+        return $answers;
     }
 
     /**
@@ -45,19 +45,19 @@ class AttendeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $trainingId)
+    public function store(Request $request, $trainingId, $questionId)
     {
         $this->validate($request, [
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'company' => '',
+            'text' => 'required',
+            'isCorrect' => 'required|bool',
         ]);
 
         $training = Training::findOrFail($trainingId);
+        $question = $training->questions()->findOrFail($questionId);
 
-        $attendee = $training->attendees()->create($request->all());
+        $answer = $question->answers()->create($request->all());
 
-        return $attendee;
+        return $answer;
     }
 
     /**
@@ -66,12 +66,14 @@ class AttendeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($trainingId, $id)
+    public function show($trainingId, $questionId, $id)
     {
         $training = Training::findOrFail($trainingId);
-        $attendee = $training->attendees()->findOrFail($id);
+        $question = $training->questions()->findOrFail($questionId);
 
-        return $attendee;
+        $answer = $question->answers()->findOrFail($id);
+
+        return $answer;
     }
 
     /**
@@ -92,15 +94,22 @@ class AttendeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $trainingId, $id)
+    public function update(Request $request, $trainingId, $questionId, $id)
     {
         $training = Training::findOrFail($trainingId);
-        $attendee = $training->attendees()->findOrFail($id);
+        $question = $training->questions()->findOrFail($questionId);
 
-        $attendee->fill($request->all());
-        $attendee->save();
+        $answer = $question->answers()->findOrFail($id);
 
-        return $attendee;
+        $this->validate($request, [
+            'text' => 'required',
+            'isCorrect' => 'required|bool',
+        ]);
+
+        $answer->fill($request->all());
+        $answer->save();
+
+        return $answer;
     }
 
     /**
@@ -109,11 +118,13 @@ class AttendeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($trainingId, $id)
+    public function destroy($trainingId, $questionId, $id)
     {
         $training = Training::findOrFail($trainingId);
-        $attendee = $training->attendees()->findOrFail($id);
+        $question = $training->questions()->findOrFail($questionId);
 
-        return ['success' => $attendee->delete()];
+        $answer = $question->answers()->findOrFail($id);
+
+        return ['success' => $answer->delete()];
     }
 }
