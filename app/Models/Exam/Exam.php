@@ -12,5 +12,4 @@ class Exam extends Model
     {
         $this->hasMany(Attendee::class);
     }
-
 }

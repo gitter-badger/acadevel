@@ -13,5 +13,4 @@ class Attendee extends Model
     {
         return $this->hasMany(ExamAnswer::class);
     }
-
 }
