@@ -30,11 +30,10 @@ Route::group(['middleware' => ['web']], function () {
 Route::resource('trainings', 'TrainingController');
 Route::resource('trainings.attendees', 'AttendeeController');
 
-Route::get('exam', 'ExamController@index');
-
-Route::get('feedback', 'FeedbackController@index');
-
-// Dashboard route
+// Frontend Routes
+Route::get('/', 'DashboardController@index');
 Route::get('dashboard', 'DashboardController@index');
+Route::get('exam', 'ExamController@index');
+Route::get('feedback', 'FeedbackController@index');
 
 
