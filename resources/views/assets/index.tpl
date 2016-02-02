@@ -8,7 +8,7 @@
     <meta name="keywords" content="">
     <meta name="author" content="">
 
-    <base href="/acadevel/resources/views/">
+    <base href="{{asset('')}}">
 
     <title>Academy of Light &middot; shopware AG</title>
 
