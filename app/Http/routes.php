@@ -27,19 +27,16 @@ Route::group(['middleware' => ['web']], function () {
 
 });
 
-Route::post('api/trainings', 'TrainingController@create');
-
-
+// Frontend Routes
+Route::get('/', 'DashboardController@index');
+Route::get('dashboard', 'DashboardController@index');
 Route::get('exam', 'ExamController@index');
-
 Route::get('feedback', 'FeedbackController@index');
 
-// Dashboard route
-Route::get('dashboard', 'DashboardController@index');
-
+// API Routes
+Route::post('api/trainings', 'TrainingController@create');
 Route::get('api/trainings', 'TrainingController@getList');
 Route::get('api/trainings/{id}', 'TrainingController@getOne');
-
 Route::get('api/trainings/{id}/attendees', 'AttendeeController@getList');
 Route::post('api/trainings/{id}/attendees', 'AttendeeController@create');
 Route::get('api/trainings/{id}/attendees/{attendeeId}', 'AttendeeController@getOne');
