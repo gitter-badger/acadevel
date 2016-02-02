@@ -2,9 +2,9 @@
 
 namespace App\Models\Question;
 
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Answer extends Eloquent
+class Answer extends Model
 {
     protected $fillable = ['text', 'correct'];
 }

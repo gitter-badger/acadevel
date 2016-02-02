@@ -2,9 +2,8 @@
 
 namespace App\Models\Exam;
 
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class ExamAnswer extends Eloquent
+class ExamAnswer extends Model
 {
-
 }

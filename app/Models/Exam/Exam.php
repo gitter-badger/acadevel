@@ -3,13 +3,14 @@
 namespace App\Models\Exam;
 
 use App\Models\Attendee;
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Exam extends Eloquent
+class Exam extends Model
 {
+    public $incrementing = false;
     public function attendees()
     {
-        $this->embedsMany(Attendee::class);
+        $this->hasMany(Attendee::class);
     }
 
 }

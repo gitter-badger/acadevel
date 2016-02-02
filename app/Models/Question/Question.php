@@ -3,14 +3,15 @@
 namespace App\Models\Question;
 
 use App\Models\Question\Answer;
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Question extends Eloquent
+class Question extends Model
 {
+    public $incrementing = false;
     protected $fillable = ['text'];
 
     public function answers()
     {
-        return $this->embedsMany(Answer::class);
+        return $this->hasMany(Answer::class);
     }
 }

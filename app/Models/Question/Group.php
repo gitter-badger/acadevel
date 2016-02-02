@@ -2,14 +2,15 @@
 
 namespace App\Models\Question;
 
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Group extends Eloquent
+class Group extends Model
 {
+    public $incrementing = false;
     protected $fillable = ['name'];
 
    public function questions()
    {
-       return $this->embedsMany(Question::class);
+       return $this->hasMany(Question::class);
    }
 }

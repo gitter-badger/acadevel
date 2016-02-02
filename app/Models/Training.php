@@ -3,22 +3,21 @@
 namespace App\Models;
 
 use App\Models\Exam\Exam;
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Training extends Eloquent
+
+class Training extends Model
 {
-
-    protected $collection = 'training';
     protected $fillable = ['name'];
 
     public function attendees()
     {
-        return $this->embedsMany(Attendee::class);
+        return $this->hasMany(Attendee::class);
     }
 
     public function exam()
     {
-        return $this->embedsOne(Exam::class);
+        return $this->hasOne(Exam::class);
     }
 
 

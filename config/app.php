@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'url' => 'http://localhost',
+    'url' => 'http://localhost/laracademy',
 
     /*
     |--------------------------------------------------------------------------
@@ -155,8 +155,6 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-
-        Jenssegers\Mongodb\MongodbServiceProvider::class,
 
         // add smarty extension
         \Ytake\LaravelSmarty\SmartyServiceProvider::class,

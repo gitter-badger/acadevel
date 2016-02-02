@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use App\Models\Exam\ExamAnswer;
-use Jenssegers\Mongodb\Model as Eloquent;
+use Illuminate\Database\Eloquent\Model;
 
-class Attendee extends Eloquent
+class Attendee extends Model
 {
     protected $fillable = ['firstname', 'lastname', 'company'];
 
     public function answers()
     {
-        return $this->embedsMany(ExamAnswer::class);
+        return $this->hasMany(ExamAnswer::class);
     }
 
 }
