@@ -17,4 +17,9 @@ class Attendee extends Model
     {
         return $this->belongsTo(\App\Models\Attendee::class);
     }
+
+    public function getPassed()
+    {
+        return $this->score >= 50;
+    }
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
-    protected $table = "exam_attendee_question_anser";
+    protected $table = "exam_attendee_question_answer";
 
     public function question()
     {
