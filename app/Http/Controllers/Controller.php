@@ -90,6 +90,16 @@ class Controller extends BaseController
                 'url' => url('/charts'),
                 'label' => 'Auswertung',
                 'active' => false
+            ],
+            [
+                'type' => 'category',
+                'label' => 'Einstellungen'
+            ],
+            [
+                'type' => 'link',
+                'url' => url('logout'),
+                'label' => 'Abmelden',
+                'active' => false
             ]
         ]);
 

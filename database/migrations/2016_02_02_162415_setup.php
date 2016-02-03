@@ -13,7 +13,6 @@ class Setup extends Migration
      */
     public function up()
     {
-        $this->down();
         Schema::create('training', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
