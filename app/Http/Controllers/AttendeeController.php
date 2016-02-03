@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
 use App\Models\Attendee;
 use App\Models\Training;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class AttendeeController extends Controller
@@ -15,10 +13,12 @@ class AttendeeController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @return array
      */
     public function index($trainingId)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
         $limit = (int) Input::get('limit', 25);
@@ -31,8 +31,6 @@ class AttendeeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -42,8 +40,9 @@ class AttendeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @return Attendee
      */
     public function store(Request $request, $trainingId)
     {
@@ -53,8 +52,10 @@ class AttendeeController extends Controller
             'company' => '',
         ]);
 
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
+        /** @var Attendee $attendee */
         $attendee = $training->attendees()->create($request->all());
 
         return $attendee;
@@ -63,12 +64,16 @@ class AttendeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $id
+     * @return Attendee
      */
     public function show($trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Attendee $attendee */
         $attendee = $training->attendees()->findOrFail($id);
 
         return $attendee;
@@ -77,8 +82,7 @@ class AttendeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
      */
     public function edit($id)
     {
@@ -88,13 +92,17 @@ class AttendeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @param int $id
+     * @return Attendee
      */
     public function update(Request $request, $trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Attendee $attendee */
         $attendee = $training->attendees()->findOrFail($id);
 
         $attendee->fill($request->all());
@@ -106,12 +114,16 @@ class AttendeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $id
+     * @return array
      */
     public function destroy($trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Attendee $attendee */
         $attendee = $training->attendees()->findOrFail($id);
 
         return ['success' => $attendee->delete()];

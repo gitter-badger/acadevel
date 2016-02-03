@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
+use App\Models\Question\Answer;
+use App\Models\Question\Question;
 use App\Models\Training;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class AnswerController extends Controller
@@ -14,11 +14,16 @@ class AnswerController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $questionId
+     * @return array
      */
     public function index($trainingId, $questionId)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($questionId);
 
         $limit = (int) Input::get('limit', 25);
@@ -31,8 +36,6 @@ class AnswerController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -42,8 +45,10 @@ class AnswerController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @param int $questionId
+     * @return Answer
      */
     public function store(Request $request, $trainingId, $questionId)
     {
@@ -52,9 +57,13 @@ class AnswerController extends Controller
             'isCorrect' => 'required|bool',
         ]);
 
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($questionId);
 
+        /** @var Answer $answer */
         $answer = $question->answers()->create($request->all());
 
         return $answer;
@@ -63,14 +72,20 @@ class AnswerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $questionId
+     * @param int $id
+     * @return Answer
      */
     public function show($trainingId, $questionId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($questionId);
 
+        /** @var Answer $answer */
         $answer = $question->answers()->findOrFail($id);
 
         return $answer;
@@ -79,8 +94,7 @@ class AnswerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
      */
     public function edit($id)
     {
@@ -90,15 +104,21 @@ class AnswerController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @param int $questionId
+     * @param int $id
+     * @return Answer
      */
     public function update(Request $request, $trainingId, $questionId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($questionId);
 
+        /** @var Answer $answer */
         $answer = $question->answers()->findOrFail($id);
 
         $this->validate($request, [
@@ -115,14 +135,20 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $questionId
+     * @param int $id
+     * @return array
      */
     public function destroy($trainingId, $questionId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($questionId);
 
+        /** @var Answer $answer */
         $answer = $question->answers()->findOrFail($id);
 
         return ['success' => $answer->delete()];

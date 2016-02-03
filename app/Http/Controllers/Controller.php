@@ -18,6 +18,9 @@ class Controller extends BaseController
      */
     private $_viewData = [];
 
+    /**
+     * Controller constructor.
+     */
     public function __construct()
     {
         $this->createMenu();
@@ -26,8 +29,8 @@ class Controller extends BaseController
     /**
      * Get the evaluated view contents for the given view.
      *
-     * @param  string $view
-     * @param  array  $data
+     * @param string $view
+     * @param array $data
      * @return View
      */
     public function render($view, array $data = [])
@@ -44,6 +47,9 @@ class Controller extends BaseController
         $this->_viewData[$key] = $value;
     }
 
+    /**
+     *
+     */
     private function createMenu()
     {
         $schulungen = $this->getSchulungen();
@@ -90,6 +96,9 @@ class Controller extends BaseController
         $this->assign('menu', $menu);
     }
 
+    /**
+     * @return array
+     */
     private function getSchulungen()
     {
         $schulungen = Training::all();
