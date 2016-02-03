@@ -29,10 +29,11 @@
             </div>
         </div>
 
-        <div>
+        <div style="margin-top:20px; text-align:right">
             {{csrf_field()}}
             {{method_field('put')}}
-            <button type="submit" class="btn btn-default">speichern</button>
+            <button type="submit" class="ce apn">speichern</button>
+
         </div>
     </form>
 

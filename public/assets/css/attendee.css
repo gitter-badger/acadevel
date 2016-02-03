@@ -1,0 +1,19 @@
+.question-group {
+    margin-top: 200px;
+}
+
+.question-group h1 {
+    text-align: center;
+}
+
+.question-group  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 200px;
+}
+
+
+.question-group  ul li {
+    font-size: 25px;
+}
