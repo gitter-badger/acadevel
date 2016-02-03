@@ -17,3 +17,30 @@
 .question-group  ul li {
     font-size: 25px;
 }
+
+.login {
+    width: 400px;
+    margin: 200px auto 0 auto;
+}
+
+.login-submit {
+    margin-top: 20px;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.attendee-headline {
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.alert {
+    padding: 8px;
+    margin-bottom: 0;
+}
+
+.login-form {
+    margin-top: 20px;
+}
