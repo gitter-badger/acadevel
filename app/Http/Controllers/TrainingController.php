@@ -89,7 +89,8 @@ class TrainingController extends Controller
      *
      * @param Request $request
      * @param int $id
-     * @return Training
+     * @return $this|Training
+     * @throws ValidationException
      */
     public function update(Request $request, $id)
     {
@@ -111,7 +112,7 @@ class TrainingController extends Controller
 
         if ($request->wantsJson()) {
             if ($validator->fails()) {
-               throw new ValidationException($validator);
+                throw new ValidationException($validator);
             }
 
             return $training;

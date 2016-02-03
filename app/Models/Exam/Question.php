@@ -29,6 +29,6 @@ class Question extends Model
 
     public function getPassed()
     {
-        return $this->score >= 50%;
+        return $this->score >= 50;
     }
 }

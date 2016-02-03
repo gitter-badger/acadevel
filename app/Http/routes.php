@@ -23,6 +23,8 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
+    Route::auth();
+
     Route::resource('trainings', 'TrainingController');
     Route::resource('trainings.exams', 'ExamController');
     Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
@@ -39,4 +41,19 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dashboard', 'DashboardController@index');
     Route::get('exam', 'ExamController@index');
     Route::get('feedback', 'FeedbackController@index');
+
+    // Authentication routes
+    Route::get('login', 'Auth\AuthController@getLogin');
+    Route::post('login', 'Auth\AuthController@postLogin');
+    Route::get('logout', 'Auth\AuthController@getLogout');
+
+    // Registration routes
+    Route::get('register', 'Auth\AuthController@getRegister');
+    Route::post('register', 'Auth\AuthController@postRegister');
+
+    // password forgotten route
+    Route::get('password/email', 'Auth\PasswordController@getEmail');
+
+    // test routes
+    Route::get('test', 'TestController@test');
 });

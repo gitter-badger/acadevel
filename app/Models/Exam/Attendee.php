@@ -2,7 +2,6 @@
 
 namespace App\Models\Exam;
 
-use App\Models\Training;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendee extends Model

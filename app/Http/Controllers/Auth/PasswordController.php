@@ -17,13 +17,10 @@ class PasswordController extends Controller
     | explore this trait and override any methods you wish to tweak.
     |
     */
-
     use ResetsPasswords;
 
     /**
      * Create a new password controller instance.
-     *
-     * @return void
      */
     public function __construct()
     {

@@ -14,7 +14,7 @@ class Setup extends Migration
     public function up()
     {
         $this->down();
-        Schema::create('training', function(Blueprint $table) {
+        Schema::create('training', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
 
@@ -22,7 +22,7 @@ class Setup extends Migration
             $table->unique('name');
         });
 
-        Schema::create('exam', function(Blueprint $table) {
+        Schema::create('exam', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('training_id')->unsigned();
             $table->date('date_start');
@@ -33,7 +33,7 @@ class Setup extends Migration
             $table->foreign('training_id')->references('id')->on('training');
         });
 
-        Schema::create('attendee', function(Blueprint $table) {
+        Schema::create('attendee', function (Blueprint $table) {
             $table->increments('id');
             $table->string('firstname');
             $table->string('lastname');
@@ -41,7 +41,7 @@ class Setup extends Migration
             $table->timestamps();
         });
 
-        Schema::create('exam_attendee', function(Blueprint $table) {
+        Schema::create('exam_attendee', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('exam_id')->unsigned();
             $table->integer('attendee_id')->unsigned();
@@ -53,7 +53,7 @@ class Setup extends Migration
             $table->foreign('attendee_id')->references('id')->on('attendee');
         });
 
-        Schema::create('question', function(Blueprint $table) {
+        Schema::create('question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('training_id')->unsigned();
             $table->text('text');
@@ -63,7 +63,7 @@ class Setup extends Migration
             $table->foreign('training_id')->references('id')->on('training');
         });
 
-        Schema::create('answer', function(Blueprint $table) {
+        Schema::create('answer', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id')->unsigned();
             $table->text('text');
@@ -73,7 +73,7 @@ class Setup extends Migration
             $table->foreign('question_id')->references('id')->on('question');
         });
 
-        Schema::create('exam_attendee_question', function(Blueprint $table) {
+        Schema::create('exam_attendee_question', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('exam_attendee_id')->unsigned();
             $table->integer('question_id')->unsigned();
@@ -84,7 +84,7 @@ class Setup extends Migration
             $table->foreign('question_id')->references('id')->on('question');
         });
 
-        Schema::create('exam_attendee_question_answer', function(Blueprint $table) {
+        Schema::create('exam_attendee_question_answer', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('exam_attendee_question_id')->unsigned();
             $table->integer('answer_id')->unsigned();
