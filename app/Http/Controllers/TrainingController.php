@@ -2,21 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
 use App\Models\Training;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class TrainingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
@@ -28,8 +26,6 @@ class TrainingController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -39,8 +35,8 @@ class TrainingController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Training
      */
     public function store(Request $request)
     {
@@ -55,11 +51,13 @@ class TrainingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param Request $request
+     * @return View
      */
     public function show($id, Request $request)
     {
+        /** @var Training $training */
         $training = Training::with('attendees')->findOrFail($id);
 
         if ($request->wantsJson()) {
@@ -72,11 +70,13 @@ class TrainingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @param Request $request
+     * @return View
      */
     public function edit($id, Request $request)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($id);
         $errors = null;
 
@@ -105,12 +105,13 @@ class TrainingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Training
      */
     public function update(Request $request, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($id);
 
         $this->validate($request, [
@@ -127,11 +128,12 @@ class TrainingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return array
      */
     public function destroy($id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($id);
 
         return ['success' => $training->delete()];

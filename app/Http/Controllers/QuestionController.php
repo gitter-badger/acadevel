@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests;
+use App\Models\Question\Question;
 use App\Models\Training;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class QuestionController extends Controller
@@ -14,10 +13,12 @@ class QuestionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @return array
      */
     public function index($trainingId)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
         $limit = (int) Input::get('limit', 25);
@@ -30,8 +31,6 @@ class QuestionController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -41,8 +40,9 @@ class QuestionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @return Question
      */
     public function store(Request $request, $trainingId)
     {
@@ -50,8 +50,10 @@ class QuestionController extends Controller
             'text' => 'required',
         ]);
 
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
+        /** @var Question $question */
         $question = $training->questions()->create($request->all());
 
         return $question;
@@ -60,12 +62,16 @@ class QuestionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $id
+     * @return Question
      */
     public function show($trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->with('answers')->findOrFail($id);
 
         return $question;
@@ -74,8 +80,7 @@ class QuestionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
      */
     public function edit($id)
     {
@@ -85,13 +90,17 @@ class QuestionController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $trainingId
+     * @param int $id
+     * @return Question
      */
     public function update(Request $request, $trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($id);
 
         $this->validate($request, [
@@ -107,12 +116,16 @@ class QuestionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $trainingId
+     * @param int $id
+     * @return array
      */
     public function destroy($trainingId, $id)
     {
+        /** @var Training $training */
         $training = Training::findOrFail($trainingId);
+
+        /** @var Question $question */
         $question = $training->questions()->findOrFail($id);
 
         return ['success' => $question->delete()];

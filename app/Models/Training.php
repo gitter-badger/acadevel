@@ -6,7 +6,6 @@ use App\Models\Exam\Exam;
 use App\Models\Question\Question;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Training extends Model
 {
     protected $fillable = ['name', 'maxAttendees'];
@@ -30,7 +29,7 @@ class Training extends Model
     {
         parent::__construct($attributes);
 
-        self::saving(function($training) {
+        self::saving(function ($training) {
             $training->slug = str_slug($training->name);
         });
     }

@@ -23,26 +23,19 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-
     Route::resource('trainings', 'TrainingController');
     Route::resource('trainings.attendees', 'AttendeeController');
     Route::resource('trainings.questions', 'QuestionController');
     Route::resource('trainings.questions.answers', 'AnswerController');
 
-// custom user friendly routes
+    // custom user friendly routes
     Route::get('trainings/{id}/{slug?}', ['as' => 'trainings.show', 'uses' => 'TrainingController@show']);
     Route::get('trainings/{id}/{slug}/edit', ['as' => 'trainings.edit', 'uses' => 'TrainingController@edit']);
     Route::post('trainings/{id}/{slug?}/edit', ['as' => 'trainings.edit', 'uses' => 'TrainingController@edit']);
 
-// Frontend Routes
+    // Frontend Routes
     Route::get('/', 'DashboardController@index');
     Route::get('dashboard', 'DashboardController@index');
     Route::get('exam', 'ExamController@index');
     Route::get('feedback', 'FeedbackController@index');
-
-
 });
-
-
-
-
