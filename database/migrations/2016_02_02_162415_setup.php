@@ -13,40 +13,84 @@ class Setup extends Migration
      */
     public function up()
     {
-        Schema::create('trainings', function(Blueprint $table) {
+        $this->down();
+        Schema::create('training', function(Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('slug');
-            $table->integer('maxAttendees');
-            $table->timestamps();
 
+            $table->timestamps();
             $table->unique('name');
-            $table->unique('slug');
         });
 
-        Schema::create('attendees', function(Blueprint $table) {
+        Schema::create('exam', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('training_id');
+            $table->integer('training_id')->unsigned();
+            $table->date('date_start');
+            $table->date('date_end')->nullable();
+            $table->datetime('completed_at')->nullable();
+
+            $table->timestamps();
+            $table->foreign('training_id')->references('id')->on('training');
+        });
+
+        Schema::create('attendee', function(Blueprint $table) {
+            $table->increments('id');
             $table->string('firstname');
             $table->string('lastname');
-            $table->string('company');
+            $table->string('company')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('questions', function(Blueprint $table) {
+        Schema::create('exam_attendee', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('training_id');
-            $table->text('text');
+            $table->integer('exam_id')->unsigned();
+            $table->integer('attendee_id')->unsigned();
+            $table->datetime('submitted_at')->nullable();
+            $table->string('login', 10);
             $table->timestamps();
+
+            $table->foreign('exam_id')->references('id')->on('exam');
+            $table->foreign('attendee_id')->references('id')->on('attendee');
         });
 
-
-        Schema::create('answers', function(Blueprint $table) {
+        Schema::create('question', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('question_id');
+            $table->integer('training_id')->unsigned();
             $table->text('text');
-            $table->boolean('isCorrect');
+            $table->text('tags')->nullable();
             $table->timestamps();
+
+            $table->foreign('training_id')->references('id')->on('training');
+        });
+
+        Schema::create('answer', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('question_id')->unsigned();
+            $table->text('text');
+            $table->boolean('isCorrect')->default(false);
+            $table->timestamps();
+
+            $table->foreign('question_id')->references('id')->on('question');
+        });
+
+        Schema::create('exam_attendee_question', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('exam_attendee_id')->unsigned();
+            $table->integer('question_id')->unsigned();
+
+            $table->unique(['exam_attendee_id', 'question_id']);
+
+            $table->foreign('exam_attendee_id')->references('id')->on('exam_attendee');
+            $table->foreign('question_id')->references('id')->on('question');
+        });
+
+        Schema::create('exam_attendee_question_answer', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('exam_attendee_question_id')->unsigned();
+            $table->integer('answer_id')->unsigned();
+
+            $table->foreign('exam_attendee_question_id')->references('id')->on('exam_attendee_question');
+            $table->foreign('answer_id')->references('id')->on('answer');
         });
 
 
@@ -59,9 +103,13 @@ class Setup extends Migration
      */
     public function down()
     {
-        Schema::drop('trainings');
-        Schema::drop('attendees');
-        Schema::drop('questions');
-        Schema::drop('answers');
+        Schema::dropIfExists('exam_attendee_question_answer');
+        Schema::dropIfExists('exam_attendee_question');
+        Schema::dropIfExists('answer');
+        Schema::dropIfExists('question');
+        Schema::dropIfExists('exam_attendee');
+        Schema::dropIfExists('attendee');
+        Schema::dropIfExists('exam');
+        Schema::dropIfExists('training');
     }
 }
