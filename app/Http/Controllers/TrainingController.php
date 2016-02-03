@@ -118,7 +118,7 @@ class TrainingController extends Controller
             return $training;
         }
 
-        return redirect()->route('trainings.edit', [$training->id])->withInput()->withErrors($errors);
+        return redirect()->route('backend.trainings.edit', [$training->id])->withInput()->withErrors($errors);
     }
 
     /**

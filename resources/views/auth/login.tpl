@@ -7,7 +7,7 @@
                 <div class="">
                     <div class="">Login</div>
                     <div class="">
-                        <form class="" role="form" method="POST" action="{url('/login')}">
+                        <form class="" role="form" method="POST" action="{url('/backend/login')}">
                             {csrf_field()}
 
                             <div class="{if $errors->has('email')} has-error{else}{/if}">

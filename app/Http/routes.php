@@ -23,34 +23,52 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-    Route::group(['middleware' => ['auth']], function () {
-        Route::resource('trainings', 'TrainingController');
-        Route::resource('trainings.exams', 'ExamController');
-        Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
-        Route::resource('trainings.exams.attendees.questions', 'ExamQuestionController');
-        Route::resource('trainings.exams.attendees.questions.answers', 'ExamAnswerController');
 
-        Route::resource('trainings.questions', 'QuestionController');
-        Route::resource('trainings.questions.answers', 'AnswerController');
+    Route::group(['prefix' => 'backend'], function() {
+        Route::group(['middleware' => ['auth']], function () {
 
-        Route::resource('attendees', 'AttendeeController');
+            // Training + Trainingattendees
+            Route::resource('trainings', 'TrainingController');
+            Route::resource('trainings.exams', 'TrainingExamController');
+            Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
+            Route::resource('trainings.exams.attendees.questions', 'ExamQuestionController');
+            Route::resource('trainings.exams.attendees.questions.answers', 'ExamAnswerController');
 
-        // Frontend Routes
-        Route::get('/', 'DashboardController@index');
-        Route::get('dashboard', 'DashboardController@index');
-        Route::get('exam', 'ExamController@index');
-        Route::get('feedback', 'FeedbackController@index');
+            // Question catalog
+            Route::resource('trainings.questions', 'QuestionController');
+            Route::resource('trainings.questions.answers', 'AnswerController');
+
+            // Attendees
+            Route::resource('attendees', 'AttendeeController');
+
+            // Home Routes
+            Route::get('/', 'DashboardController@index');
+            Route::get('dashboard', 'DashboardController@index');
+        });
+
+        // Authentication routes
+        Route::get('login', 'Auth\AuthController@getLogin');
+        Route::post('login', 'Auth\AuthController@postLogin');
+        Route::get('logout', 'Auth\AuthController@getLogout');
+
+        // Registration routes
+        Route::get('register', 'Auth\AuthController@getRegister');
+        Route::post('register', 'Auth\AuthController@postRegister');
+
+        // password forgotten route
+        Route::get('password/email', 'Auth\PasswordController@getEmail');
     });
 
-    // Authentication routes
-    Route::get('login', 'Auth\AuthController@getLogin');
-    Route::post('login', 'Auth\AuthController@postLogin');
-    Route::get('logout', 'Auth\AuthController@getLogout');
+    // attendee frontend
+    Route::get('/', 'ExamController@index');
+    Route::get('/', ['as' => 'exam', 'uses' => 'ExamController@index']);
 
-    // Registration routes
-    Route::get('register', 'Auth\AuthController@getRegister');
-    Route::post('register', 'Auth\AuthController@postRegister');
+    // feedback
+    Route::get('feedback', 'FeedbackController@index');
 
-    // password forgotten route
-    Route::get('password/email', 'Auth\PasswordController@getEmail');
+    // attendee login
+    Route::get('login', ['as' => 'examLogin', 'uses' => 'ExamController@login']);
+    Route::get('logout', ['as' => 'examLogout', 'uses' => 'ExamController@logout']);
+    Route::post('login', ['as' => 'examLoginCheck', 'uses' => 'ExamController@loginCheck']);
+
 });

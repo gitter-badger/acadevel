@@ -20,7 +20,7 @@
     {/if}
 
 
-    <form class="form-horizontal" action="{{Route('trainings.update', [$training->id])}}" method="post">
+    <form class="form-horizontal" action="{{Route('backend.trainings.update', [$training->id])}}" method="post">
 
         <div class="form-group row">
             <label class="form-control-label col-sm-2">Name</label>

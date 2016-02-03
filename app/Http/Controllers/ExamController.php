@@ -2,95 +2,58 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Models\Exam\Exam;
-use App\Models\Training;
+use App\Models\Exam\Attendee;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+
+use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class ExamController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param int $trainingId
-     * @return array
+     * @return \Illuminate\Http\Response
      */
-    public function index($trainingId)
+    public function index()
     {
-        /** @var Training $training */
-        $training = Training::findOrFail($trainingId);
+        if (!Session::has('exam_attendee_login')) {
+            return redirect()->route('examLogin');
+        }
 
-        $limit = (int) Input::get('limit', 25);
-        $page = (int) Input::get('page', 1);
-
-        return $training->exams()->paginate($limit, ['*'], 'page', $page);
+        return $this->render('exam/index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function login()
     {
-        //
+        if (Session::has('exam_attendee_login')) {
+            return redirect()->route('exam');
+        }
+
+        return $this->render('exam/login');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     */
-    public function store(Request $request)
+    public function logout()
     {
-        //
+        Session::remove('exam_attendee_login');
+
+        return redirect()->route('examLogin');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $trainingId
-     * @param int $id
-     * @return Exam
-     */
-    public function show($trainingId, $id)
+    public function loginCheck(Request $request)
     {
-        /** @var Training $training */
-        $training = Training::findOrFail($trainingId);
+        $login = $request->get('login', '');
+        $validator = Validator::make($request->all(), ['login' => 'required|exists:exam_attendee,login']);
 
-        /** @var Exam $exam */
-        $exam = $training->exams()->with('attendees')->findOrFail($id);
+        if ($validator->fails()) {
+            return redirect()->route('examLogin')->withErrors($validator);
+        }
 
-        return $exam;
-    }
+        $attendee = Attendee::where('login', '=', $login)->first();
+        Session::set('exam_attendee_login', $attendee->login);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     */
-    public function destroy($id)
-    {
-        //
+        return back();
     }
 }

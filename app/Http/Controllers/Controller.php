@@ -97,7 +97,7 @@ class Controller extends BaseController
             ],
             [
                 'type' => 'link',
-                'url' => url('logout'),
+                'url' => url('backend/logout'),
                 'label' => 'Abmelden',
                 'active' => false
             ]
@@ -117,7 +117,7 @@ class Controller extends BaseController
         foreach ($schulungen as $schulung) {
             $menuItems[] = [
                 'type' => 'link',
-                'url' => route('trainings.show', ['id' => $schulung->id, 'slug' => $schulung->slug]),
+                'url' => route('backend.trainings.show', ['id' => $schulung->id]),
                 'label' => $schulung->name,
                 'active' => false
             ];

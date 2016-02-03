@@ -4,7 +4,7 @@
     <div class="apa">
         <div class="apb">
             <h6 class="apd">Module</h6>
-            <h2 class="apc">{$training.name} <a href="{{Route('trainings.edit', [$training->id, $training->slug])}}" type="button" class="ce apn">
+            <h2 class="apc">{$training.name} <a href="{{Route('backend.trainings.edit', [$training->id, $training->slug])}}" type="button" class="ce apn">
                     <span class="bv aez"></span> bearbeiten
                 </a></h2>
         </div>
@@ -31,7 +31,7 @@
                         <td>{$exam.date_end}</td>
                         <td>{$exam.attendees|count}</td>
                         <td>
-                            <a href="{{Route('trainings.exams.attendees.index', [$training->id, $exam->id])}}" type="button" class="ce apn">
+                            <a href="{{Route('backend.trainings.exams.attendees.index', [$training->id, $exam->id])}}" type="button" class="ce apn">
                                 <span class="bv aez"></span> bearbeiten
                             </a>
                         </td>
