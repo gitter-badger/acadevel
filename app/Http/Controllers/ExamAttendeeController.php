@@ -70,6 +70,7 @@ class ExamAttendeeController extends Controller
      * Display the specified resource.
      *
      * @param int $trainingId
+     * @param int $examId
      * @param int $id
      * @return Attendee
      */
@@ -91,6 +92,7 @@ class ExamAttendeeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $trainingId
+     * @param int $examId
      * @param int $id
      * @return array
      */
