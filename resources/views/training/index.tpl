@@ -4,52 +4,37 @@
     <div class="apa">
         <div class="apb">
             <h6 class="apd">Module</h6>
-            <h2 class="apc">{$training.name}</h2>
-        </div>
-
-    </div>
-
-    <div class="akg ue">
-        <div class="akh aki">
-            <div class="tn aol">
-                <input type="text" class="form-control aqr" placeholder="Teilnehmer suchen..">
-                <span class="bv adn"></span>
-            </div>
-        </div>
-        <div class="akh">
-            <div class="nz">
-                <a href="{{Route('trainings.edit', [$training->id, $training->slug])}}" type="button" class="ce apn">
+            <h2 class="apc">{$training.name} <a href="{{Route('trainings.edit', [$training->id, $training->slug])}}" type="button" class="ce apn">
                     <span class="bv aez"></span> bearbeiten
-                </a>
-                <button type="button" class="ce apn">
-                    <span class="bv zz"></span>
-                </button>
-            </div>
+                </a></h2>
         </div>
+
     </div>
 
-    <h3>Teilnehmer ({$training.attendees|count} / {$training.maxAttendees})</h3>
+
+    <h3>Termine</h3>
 
     <div class="ud">
         <div class="eg">
             <table class="cl" data-sort="table">
                 <thead>
                 <tr>
-                    <th class="header"><input type="checkbox" class="aqk" id="selectAll"></th>
-                    <th class="header">Vorname</th>
-                    <th class="header">Nachname</th>
-                    <th class="header headerSortDown">Unternehmen</th>
-                    <th class="header">Bestanden</th>
+                    <th class="header headerSortDown">Von</th>
+                    <th class="header">Bis</th>
+                    <th class="header">Angemeldet</th>
                 </tr>
                 </thead>
                 <tbody>
-                {foreach $training.attendees as $attendee}
+                {foreach $training.exams as $exam}
                     <tr>
-                        <td><input type="checkbox" class="aql"></td>
-                        <td>{$attendee.firstname}</td>
-                        <td>{$attendee.lastname}</td>
-                        <td>{$attendee.company}</td>
-                        <td>No</td>
+                        <td>{$exam.date_start|date_format}</td>
+                        <td>{$exam.date_end}</td>
+                        <td>{$exam.attendees|count}</td>
+                        <td>
+                            <a href="{{Route('trainings.exams.attendees.index', [$training->id, $exam->id])}}" type="button" class="ce apn">
+                                <span class="bv aez"></span> bearbeiten
+                            </a>
+                        </td>
                     </tr>
                 {/foreach}
                 </tbody>

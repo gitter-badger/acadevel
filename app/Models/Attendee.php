@@ -2,20 +2,15 @@
 
 namespace App\Models;
 
-use App\Models\Exam\ExamAnswer;
 use Illuminate\Database\Eloquent\Model;
 
 class Attendee extends Model
 {
     protected $fillable = ['firstname', 'lastname', 'company'];
+    protected $table = "attendee";
 
-    public function answers()
+    public function exams()
     {
-        return $this->hasMany(ExamAnswer::class);
-    }
-
-    public function training()
-    {
-        return $this->belongsTo(Training::class);
+        return $this->belongsToMany(Exam\Attendee::class);
     }
 }

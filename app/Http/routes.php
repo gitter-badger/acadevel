@@ -24,14 +24,15 @@
 
 Route::group(['middleware' => ['web']], function () {
     Route::resource('trainings', 'TrainingController');
-    Route::resource('trainings.attendees', 'AttendeeController');
+    Route::resource('trainings.exams', 'ExamController');
+    Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
+    Route::resource('trainings.exams.attendees.questions', 'ExamQuestionController');
+    Route::resource('trainings.exams.attendees.questions.answers', 'ExamAnswerController');
+
     Route::resource('trainings.questions', 'QuestionController');
     Route::resource('trainings.questions.answers', 'AnswerController');
 
-    // custom user friendly routes
-    Route::get('trainings/{id}/{slug?}', ['as' => 'trainings.show', 'uses' => 'TrainingController@show']);
-    Route::get('trainings/{id}/{slug}/edit', ['as' => 'trainings.edit', 'uses' => 'TrainingController@edit']);
-    Route::post('trainings/{id}/{slug?}/edit', ['as' => 'trainings.edit', 'uses' => 'TrainingController@edit']);
+    Route::resource('attendees', 'AttendeeController');
 
     // Frontend Routes
     Route::get('/', 'DashboardController@index');

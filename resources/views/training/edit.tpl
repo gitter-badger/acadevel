@@ -4,7 +4,7 @@
 
     <h1>{$training.name}</h1>
 
-    {if !empty($errors)}
+    {if !empty($errors) && $errors->any()}
         <div class="alert alert-danger"  style="padding: 20px 0">
             <h4>Errors</h4>
             <ul>
@@ -20,7 +20,7 @@
     {/if}
 
 
-    <form class="form-horizontal" action="{{Route('trainings.edit', [$training->id, $training->slug])}}" method="post">
+    <form class="form-horizontal" action="{{Route('trainings.update', [$training->id])}}" method="post">
 
         <div class="form-group row">
             <label class="form-control-label col-sm-2">Name</label>
@@ -28,15 +28,10 @@
                 <input type="text" class="form-control" name="name" value="{$training->name}" />
             </div>
         </div>
-        <div class="form-group row">
-            <label class="form-control-label col-sm-2">Maximale Teilnehmer</label>
-            <div class="col-sm-10">
-                <input type="number" min="1" class="form-control" name="maxAttendees" value="{$training->maxAttendees}" />
-            </div>
-        </div>
 
         <div>
             {{csrf_field()}}
+            {{method_field('put')}}
             <button type="submit" class="btn btn-default">speichern</button>
         </div>
     </form>

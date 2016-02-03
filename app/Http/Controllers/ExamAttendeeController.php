@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Models\Attendee;
+use App\Models\Exam\Exam;
 use App\Models\Training;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-class AttendeeController extends Controller
+class ExamAttendeeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,15 +17,18 @@ class AttendeeController extends Controller
      * @param int $trainingId
      * @return array
      */
-    public function index($trainingId)
+    public function index($trainingId, $examId)
     {
         /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
+        /** @var Exam $exam */
+        $exam = $training->exams()->findOrFail($examId);
+
         $limit = (int) Input::get('limit', 25);
         $page = (int) Input::get('page', 1);
 
-        $attendees = $training->attendees()->paginate($limit, ['*'], 'page', $page);
+        $attendees = $exam->attendees()->paginate($limit, ['*'], 'page', $page);
 
         return $attendees;
     }
@@ -44,19 +48,20 @@ class AttendeeController extends Controller
      * @param int $trainingId
      * @return Attendee
      */
-    public function store(Request $request, $trainingId)
+    public function store(Request $request, $trainingId, $examId)
     {
         $this->validate($request, [
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'company' => '',
+            'attendee_id' => 'required|exists:attendee',
         ]);
 
         /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
+        /** @var Exam $exam */
+        $exam = $training->exams()->findOrFail($examId);
+
         /** @var Attendee $attendee */
-        $attendee = $training->attendees()->create($request->all());
+        $attendee = $exam->attendees()->create($request->all());
 
         return $attendee;
     }
@@ -68,45 +73,16 @@ class AttendeeController extends Controller
      * @param int $id
      * @return Attendee
      */
-    public function show($trainingId, $id)
+    public function show($trainingId, $examId, $id)
     {
         /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
-        /** @var Attendee $attendee */
-        $attendee = $training->attendees()->findOrFail($id);
-
-        return $attendee;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $trainingId
-     * @param int $id
-     * @return Attendee
-     */
-    public function update(Request $request, $trainingId, $id)
-    {
-        /** @var Training $training */
-        $training = Training::findOrFail($trainingId);
+        /** @var Exam $exam */
+        $exam = $training->exams()->findOrFail($examId);
 
         /** @var Attendee $attendee */
-        $attendee = $training->attendees()->findOrFail($id);
-
-        $attendee->fill($request->all());
-        $attendee->save();
+        $attendee = $exam->attendees()->findOrFail($id);
 
         return $attendee;
     }
@@ -118,13 +94,16 @@ class AttendeeController extends Controller
      * @param int $id
      * @return array
      */
-    public function destroy($trainingId, $id)
+    public function destroy($trainingId, $examId, $id)
     {
         /** @var Training $training */
         $training = Training::findOrFail($trainingId);
 
+        /** @var Exam $exam */
+        $exam = $training->exams()->findOrFail($examId);
+
         /** @var Attendee $attendee */
-        $attendee = $training->attendees()->findOrFail($id);
+        $attendee = $exam->attendees()->findOrFail($id);
 
         return ['success' => $attendee->delete()];
     }

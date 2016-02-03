@@ -3,34 +3,21 @@
 namespace App\Models;
 
 use App\Models\Exam\Exam;
-use App\Models\Question\Question;
 use Illuminate\Database\Eloquent\Model;
 
 class Training extends Model
 {
-    protected $fillable = ['name', 'maxAttendees'];
+    protected $fillable = ['name'];
+    protected $table = "training";
 
-    public function attendees()
+    public function exams()
     {
-        return $this->hasMany(Attendee::class);
+        return $this->hasMany(Exam::class);
     }
 
-    public function questions()
+    public function getSlug()
     {
-        return $this->hasMany(Question::class);
+        return str_slug($this->name);
     }
 
-    public function exam()
-    {
-        return $this->hasOne(Exam::class);
-    }
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        self::saving(function ($training) {
-            $training->slug = str_slug($training->name);
-        });
-    }
 }

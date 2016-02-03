@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Models\Training;
+use Illuminate\Contracts\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
@@ -41,8 +42,7 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|min:3',
-            'maxAttendees' => 'integer|min:1'
+            'name' => 'required|unique:training|min:3',
         ]);
 
         return Training::create($request->all());
@@ -58,7 +58,7 @@ class TrainingController extends Controller
     public function show($id, Request $request)
     {
         /** @var Training $training */
-        $training = Training::with('attendees')->findOrFail($id);
+        $training = Training::with('exams')->findOrFail($id);
 
         if ($request->wantsJson()) {
             return $training;
@@ -78,28 +78,10 @@ class TrainingController extends Controller
     {
         /** @var Training $training */
         $training = Training::findOrFail($id);
-        $errors = null;
 
-        if ($request->method() === Request::METHOD_POST) {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:trainings,name,'.$id.'|min:3',
-                'maxAttendees' => 'min:1|integer'
-            ]);
+        $training->fill($request->old());
 
-            $training->fill($request->all());
-
-            if (!$validator->fails()) {
-                $training->save();
-
-                $request->session()->flash('saved', true);
-
-                return redirect()->route('trainings.edit', [$training->id, $training->slug]);
-            } else {
-                $errors = $validator->errors();
-            }
-        }
-
-        return $this->render('training/edit', ['training' => $training, 'errors' => $errors]);
+        return $this->render('training/edit', ['training' => $training]);
     }
 
     /**
@@ -114,15 +96,28 @@ class TrainingController extends Controller
         /** @var Training $training */
         $training = Training::findOrFail($id);
 
-        $this->validate($request, [
-            'name' => 'required|unique:trainings,name,'.$id.'|min:3',
-            'maxAttendees' => 'min:1|integer'
+        /** @var \Illuminate\Validation\Validator $validator */
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|unique:training,name,'.$id.'|min:3'
         ]);
 
         $training->fill($request->all());
-        $training->save();
+        $errors = [];
 
-        return $training;
+        if (!$validator->fails()) {
+            $training->save();
+            $request->session()->flash('saved', true);
+        }
+
+        if ($request->wantsJson()) {
+            if ($validator->fails()) {
+               throw new ValidationException($validator);
+            }
+
+            return $training;
+        }
+
+        return redirect()->route('trainings.edit', [$training->id])->withInput()->withErrors($errors);
     }
 
     /**
