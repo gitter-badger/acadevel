@@ -23,24 +23,24 @@
 */
 
 Route::group(['middleware' => ['web']], function () {
-    Route::auth();
+    Route::group(['middleware' => ['auth']], function () {
+        Route::resource('trainings', 'TrainingController');
+        Route::resource('trainings.exams', 'ExamController');
+        Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
+        Route::resource('trainings.exams.attendees.questions', 'ExamQuestionController');
+        Route::resource('trainings.exams.attendees.questions.answers', 'ExamAnswerController');
 
-    Route::resource('trainings', 'TrainingController');
-    Route::resource('trainings.exams', 'ExamController');
-    Route::resource('trainings.exams.attendees', 'ExamAttendeeController', ['except' => ['update', 'edit']]);
-    Route::resource('trainings.exams.attendees.questions', 'ExamQuestionController');
-    Route::resource('trainings.exams.attendees.questions.answers', 'ExamAnswerController');
+        Route::resource('trainings.questions', 'QuestionController');
+        Route::resource('trainings.questions.answers', 'AnswerController');
 
-    Route::resource('trainings.questions', 'QuestionController');
-    Route::resource('trainings.questions.answers', 'AnswerController');
+        Route::resource('attendees', 'AttendeeController');
 
-    Route::resource('attendees', 'AttendeeController');
-
-    // Frontend Routes
-    Route::get('/', 'DashboardController@index');
-    Route::get('dashboard', 'DashboardController@index');
-    Route::get('exam', 'ExamController@index');
-    Route::get('feedback', 'FeedbackController@index');
+        // Frontend Routes
+        Route::get('/', 'DashboardController@index');
+        Route::get('dashboard', 'DashboardController@index');
+        Route::get('exam', 'ExamController@index');
+        Route::get('feedback', 'FeedbackController@index');
+    });
 
     // Authentication routes
     Route::get('login', 'Auth\AuthController@getLogin');
@@ -53,7 +53,4 @@ Route::group(['middleware' => ['web']], function () {
 
     // password forgotten route
     Route::get('password/email', 'Auth\PasswordController@getEmail');
-
-    // test routes
-    Route::get('test', 'TestController@test');
 });
