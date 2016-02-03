@@ -2,6 +2,7 @@
 
 namespace App\Models\Question;
 
+use App\Models\Exam\Attendee;
 use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
@@ -15,6 +16,6 @@ class Question extends Model
     }
 
     public function attendee_questions() {
-        return $this->belongsToMany();
+        return $this->belongsToMany(Attendee::class);
     }
 }
